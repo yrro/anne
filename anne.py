@@ -2,17 +2,16 @@
 #
 # Bot to anounce Debian Security Advisories to a channel.
 # Written by Sam Morris <sam@robots.org.uk>
-# $Id: anne.py,v 1.2 2006/05/18 00:13:01 sam Exp $
 #
 # $Log: anne.py,v $
+# Revision 1.3  2006/05/18 00:21:36  sam
+# Move some keywords around
+#
 # Revision 1.2  2006/05/18 00:13:01  sam
 # Grab headlines from multiple feeds.
 # Limit flood rate to one line per two seconds.
-#
 
 """Bot to announce Debian Security Advisories to a channel."""
-
-version = '$Id: anne.py,v 1.2 2006/05/18 00:13:01 sam Exp $';
 
 # Functions to print out headlines
 def getHeadlines_summary (feed, data):
@@ -132,7 +131,7 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
 if __name__ == '__main__':
 	log.startLogging (sys.stdout)
-	print 'anne (%s)' % (version)
+	print 'anne (%s)' % ('$Id: anne.py,v 1.3 2006/05/18 00:21:36 sam Exp $')
 
 	factory = AnnounceBotFactory (channel)
 	reactor.connectTCP (server, port, factory)
