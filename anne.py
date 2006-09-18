@@ -2,26 +2,6 @@
 #
 # Bot to anounce Debian Security Advisories to a channel.
 # Written by Sam Morris <sam@robots.org.uk>
-#
-# $Log: anne.py,v $
-# Revision 1.7  2006/07/27 14:20:12  sam
-# Update debianhelp.org feed URL
-#
-# Revision 1.6  2006/07/11 17:53:04  sam
-# Add LWN feed
-#
-# Revision 1.5  2006/05/31 10:09:56  sam
-# Add debianhelp.org feed
-#
-# Revision 1.4  2006/05/18 17:30:23  sam
-# Add debian-administration.org feed.
-#
-# Revision 1.3  2006/05/18 00:21:36  sam
-# Move some keywords around
-#
-# Revision 1.2  2006/05/18 00:13:01  sam
-# Grab headlines from multiple feeds.
-# Limit flood rate to one line per two seconds.
 
 """Bot to announce Debian Security Advisories to a channel."""
 
@@ -146,7 +126,7 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
 if __name__ == '__main__':
 	log.startLogging (sys.stdout)
-	print 'anne (%s)' % ('$Id: anne.py,v 1.7 2006/07/27 14:20:12 sam Exp $')
+	print 'anne -- a bot to announce RSS feed entries to an IRC channel'
 
 	factory = AnnounceBotFactory (channel)
 	reactor.connectTCP (server, port, factory)
