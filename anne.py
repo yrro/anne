@@ -4,6 +4,9 @@
 # Written by Sam Morris <sam@robots.org.uk>
 #
 # $Log: anne.py,v $
+# Revision 1.6  2006/07/11 17:53:04  sam
+# Add LWN feed
+#
 # Revision 1.5  2006/05/31 10:09:56  sam
 # Add debianhelp.org feed
 #
@@ -31,7 +34,8 @@ feeds = [{'name': 'debian-security-announce', 'url': 'http://www.debian.org/secu
          {'name': 'debian-devel-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce', 'filter': getHeadlines},
          {'name': 'debian-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce', 'filter': getHeadlines},
          {'name': 'debian-administration', 'url': 'http://www.debian-administration.org/headlines.rdf', 'filter': getHeadlines},
-		 {'name': 'debianhelp', 'url': 'http://www.debianhelp.org/backend.php', 'filter': getHeadlines}]
+		 {'name': 'debianhelp', 'url': 'http://www.debianhelp.org/backend.php', 'filter': getHeadlines},
+		 {'name': 'lwn', 'url': 'http://lwn.net/headlines/rss', 'filter': getHeadlines}]
 refresh = 60 * 60 # seconds
 #feeds = [{'name': 'yahoo', 'url': 'http://rss.news.yahoo.com/rss/topstories', 'filter': getHeadlines},
 #          {'name': 'google', 'url': 'http://news.google.com/?output=rss', 'filter': getHeadlines}]
@@ -139,7 +143,7 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
 if __name__ == '__main__':
 	log.startLogging (sys.stdout)
-	print 'anne (%s)' % ('$Id: anne.py,v 1.5 2006/05/31 10:09:56 sam Exp $')
+	print 'anne (%s)' % ('$Id: anne.py,v 1.6 2006/07/11 17:53:04 sam Exp $')
 
 	factory = AnnounceBotFactory (channel)
 	reactor.connectTCP (server, port, factory)
