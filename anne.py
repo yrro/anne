@@ -4,6 +4,9 @@
 # Written by Sam Morris <sam@robots.org.uk>
 #
 # $Log: anne.py,v $
+# Revision 1.5  2006/05/31 10:09:56  sam
+# Add debianhelp.org feed
+#
 # Revision 1.4  2006/05/18 17:30:23  sam
 # Add debian-administration.org feed.
 #
@@ -27,7 +30,8 @@ feeds = [{'name': 'debian-security-announce', 'url': 'http://www.debian.org/secu
          {'name': 'debian-news', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news', 'filter': getHeadlines},
          {'name': 'debian-devel-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce', 'filter': getHeadlines},
          {'name': 'debian-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce', 'filter': getHeadlines},
-         {'name': 'debian-administration', 'url': 'http://www.debian-administration.org/headlines.rdf', 'filter': getHeadlines}]
+         {'name': 'debian-administration', 'url': 'http://www.debian-administration.org/headlines.rdf', 'filter': getHeadlines},
+		 {'name': 'debianhelp', 'url': 'http://www.debianhelp.org/backend.php', 'filter': getHeadlines}]
 refresh = 60 * 60 # seconds
 #feeds = [{'name': 'yahoo', 'url': 'http://rss.news.yahoo.com/rss/topstories', 'filter': getHeadlines},
 #          {'name': 'google', 'url': 'http://news.google.com/?output=rss', 'filter': getHeadlines}]
@@ -135,7 +139,7 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
 if __name__ == '__main__':
 	log.startLogging (sys.stdout)
-	print 'anne (%s)' % ('$Id: anne.py,v 1.4 2006/05/18 17:30:23 sam Exp $')
+	print 'anne (%s)' % ('$Id: anne.py,v 1.5 2006/05/31 10:09:56 sam Exp $')
 
 	factory = AnnounceBotFactory (channel)
 	reactor.connectTCP (server, port, factory)
