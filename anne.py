@@ -18,7 +18,8 @@ feeds = [{'name': 'debian-security-announce', 'url': 'http://www.debian.org/secu
          {'name': 'debian-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce', 'filter': getHeadlines},
          {'name': 'debian-administration', 'url': 'http://www.debian-administration.org/headlines.rdf', 'filter': getHeadlines},
 		 {'name': 'debianhelp', 'url': 'http://www.debianhelp.org/rss.xml', 'filter': getHeadlines},
-		 {'name': 'lwn', 'url': 'http://lwn.net/headlines/rss', 'filter': getHeadlines}]
+		 {'name': 'lwn', 'url': 'http://lwn.net/headlines/rss', 'filter': getHeadlines},
+		 {'name': 'lugradio', 'url': 'http://lugradio.org/episodes.ogg.rss', 'filter': getHeadlines}]
 refresh = 60 * 60 # seconds
 #feeds = [{'name': 'yahoo', 'url': 'http://rss.news.yahoo.com/rss/topstories', 'filter': getHeadlines},
 #          {'name': 'google', 'url': 'http://news.google.com/?output=rss', 'filter': getHeadlines}]
