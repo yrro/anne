@@ -7,9 +7,9 @@
 
 # Functions to print out headlines
 def getHeadlines_summary (feed, data):
-	return sets.Set (map (lambda e: '%s: %s <%s>' % (e['title'], e['summary'], e['link']), data['entries']))
+	return sets.Set (map (lambda e: '%s (%s): %s <%s>' % (e['title'], feed['name'], e['summary'], e['link']), data['entries']))
 def getHeadlines (feed, data):
-	return sets.Set (map (lambda e: '%s: <%s>' % (e['title'], e['link']), data['entries']))
+	return sets.Set (map (lambda e: '%s (%s): <%s>' % (e['title'], feed['name'], e['link']), data['entries']))
 
 # Feed config
 feeds = [{'name': 'debian-security-announce', 'url': 'http://www.debian.org/security/dsa', 'filter': getHeadlines_summary},
