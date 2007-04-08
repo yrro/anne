@@ -7,9 +7,9 @@
 
 # Functions to print out headlines
 def getHeadlines_summary (feed, data):
-	return sets.Set (map (lambda e: '%s (%s): %s <%s>' % (e['title'], feed['name'], e['summary'], e['link']), data['entries']))
+	return set (map (lambda e: '%s (%s): %s <%s>' % (e['title'], feed['name'], e['summary'], e['link']), data['entries']))
 def getHeadlines (feed, data):
-	return sets.Set (map (lambda e: '%s (%s): <%s>' % (e['title'], feed['name'], e['link']), data['entries']))
+	return set (map (lambda e: '%s (%s): <%s>' % (e['title'], feed['name'], e['link']), data['entries']))
 
 # Feed config
 feeds = [{'name': 'debian-security-announce', 'url': 'http://www.debian.org/security/dsa', 'filter': getHeadlines_summary},
@@ -38,17 +38,14 @@ from twisted.internet import task
 
 import sys
 
-import sets
+#from sets import Set as set
 import feedparser
 
 def refreshFeeds (factory):
 	for feed in feeds:
 		# this holds the headlines for each feed
 		# initialize it to be the empty set
-		if not feed.has_key ('headlines'):
-			feed['headlines'] = sets.Set ()
-			
-		headlines_prev = feed['headlines']
+		headlines_prev = feed.get ('headlines', set ())
 
 		# if there is an error, feedparser will return an empty collection
 		# if this happens, just use the previous set of headlines
