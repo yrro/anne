@@ -120,9 +120,6 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 	def __init__ (self, channel):
 		self.channel = channel
 
-	def startedConnection (self, connector):
-		print 'connecting...'
-	
 	def buildProtocol (self, addr):
 		self.resetDelay ()
 
@@ -150,7 +147,6 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
 if __name__ == '__main__':
 	log.startLogging (sys.stdout)
-	print 'anne -- a bot to announce RSS feed entries to an IRC channel'
 
 	factory = AnnounceBotFactory (channel)
 	reactor.connectTCP (server, port, factory)
