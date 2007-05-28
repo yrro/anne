@@ -3,7 +3,10 @@
 # Bot to anounce Debian Security Advisories to a channel.
 # Written by Sam Morris <sam@robots.org.uk>
 
-"""Bot to announce Debian Security Advisories to a channel."""
+# TODO: use Twisted's Deferred callback thingies to refresh the feeds in the
+# background
+
+"""Bot that announces Debian-related news to an IRC channel."""
 
 # Functions to print out headlines
 def getHeadlines_summary (feed, data):
