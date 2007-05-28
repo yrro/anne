@@ -127,7 +127,7 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 		self.bot.factory = self
 		self.bot.nickname = nick
 		self.bot.realname = 'Announce Bot'
-		self.bot.lineRate = 2
+		self.bot.lineRate = 3
 		return self.bot
 
 	def announce (self, announcement):
