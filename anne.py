@@ -1,100 +1,86 @@
-#! /usr/bin/env python
-#
-# Bot to anounce Debian Security Advisories to a channel.
+#!/usr/bin/python
+
+# IRC bot that announces entries from RSS feeds to a channel.
 # Written by Sam Morris <sam@robots.org.uk>
 
-# TODO: use Twisted's Deferred callback thingies to refresh the feeds in the
-# background
+refresh_time = 60 * 60 # seconds
 
-"""Bot that announces Debian-related news to an IRC channel."""
+def headlines_summary (feed, data):
+	'''debian-security-announce describes the vulnerability in the summary
+	of its entries.'''
+	return set (['%s (%s): %s <%s>' % (e.title, feed['name'], e.summary, e.link) for e in data.entries])
 
-# Functions to print out headlines
-#def getHeadlines_summary (feed):
-#	return set (map (lambda e: '%s (%s): %s <%s>' % (e['title'], feed['name'], e['summary'], e['link']), feed['data']['entries']))
-#def getHeadlines (feed):
-#	return set (map (lambda e: '%s (%s): <%s>' % (e['title'], feed['name'], e['link']), feed['data']['entries']))
+def headlines_title (feed, data):
+	'''useful for testing'''
+	return  set (['%s: %s' % (feed['name'], e.title) for e in data.entries])
 
-def getHeadlines_summary (feed):
-	return ['%s (%s): %s <%s>' % (e['title'], feed.name, e['summary'], e['link']) for e in feed.data['entries']]
+feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/security/dsa', 'headline': headlines_summary},
+		 {'name': 'debian-news',                'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news'},
+		 {'name': 'debian-devel-announce',      'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce'},
+		 {'name': 'debian-announce',            'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce'},
+		 {'name': 'debian-administration.org',  'url': 'http://www.debian-administration.org/headlines.rdf'},
+		 {'name': 'debianhelp.org',             'url': 'http://www.debianhelp.org/rss.xml'},
+		 {'name': 'LWN',                        'url': 'http://lwn.net/headlines/rss'},
+		 {'name': 'lugradio',                   'url': 'http://lugradio.org/episodes.ogg.rss'},
+		 {'name': 'Planet Debian',              'url': 'http://planet.debian.org/rss20.xml'},
+		 {'name': 'Debian Times',               'url': 'http://times.debian.net/?format=rss20.xml'},
+		 {'name': 'Debian Package of the Day',  'url': 'http://debaday.debian.net/feed/'},
+		 {'name': 'Slashdot',                   'url': 'http://rss.slashdot.org/Slashdot/slashdot'},
+		 {'name': 'KernelTrap',                 'url': 'http://kerneltrap.org/node/feed'},
+		 {'name': 'UK Terror Status',           'url': 'http://www.terror-alert.co.uk/feed/'},
+		 {'name': 'Open Rights Group',          'url': 'http://www.openrightsgroup.org/feed/'},
+		 {'name': 'Free Software Foundation',   'url': 'http://www.fsf.org/news/RSS'},
+		 {'name': 'Spyblog',                    'url': 'http://p10.hostingprod.com/@spyblog.org.uk/blog/atom.xml'},
+		 {'name': 'Ars Technica',               'url': 'http://feeds.arstechnica.com/arstechnica/BAaf'}]
 
-import feedparser
-class Feed (object):
-	def __init__ (self, name, url, headline_function = None):
-		(self.__name, self.__url, self.__hf) = (name, url, headline_function)
-		self.__headlines = []
-	
-	name = property (lambda self: self.__name)
-	url = property (lambda self: self.__url)
-	
-	def refresh (self):
-		print 'refreshing %s...' % (self.name)
+#feeds = [{'name': 'yahoo',  'url': 'http://rss.news.yahoo.com/rss/topstories', 'headline': headlines_title},
+#         {'name': 'google', 'url': 'http://news.google.com/?output=rss', 'headline': headlines_title},
+#         {'name': 'bbc',  'url': 'http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml', 'headlines': headlines_title}]
 
-		data = feedparser.parse (self.url)
-		if data['bozo'] == 1:
-			print '%s: %s' % (self.name, data['bozo_exception'])
-		if len (data['entries']) == 0:
-			print '%s: no entries; ignoring' % (self.name)
-			return
-		
-		self.__data = data
-
-		if self.__hf != None:
-			self.__headlines = self.__hf (self)
-		else:
-			self.__headlines = ['%s (%s): <%s>' % (e['title'], self.name, e['link']) for e in self.data['entries']]
-
-	data = property (lambda self: self.__data)
-	headlines = property (lambda self: set (self.__headlines))
-
-# Feed config
-feeds = [Feed ('debian-security-announce', 'http://www.debian.org/security/dsa', getHeadlines_summary),
-         Feed ('debian-news', 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news'),
-         Feed ('debian-devel-announce', 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce'),
-         Feed ('debian-announce', 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce'),
-         Feed ('debian-administration.org', 'http://www.debian-administration.org/headlines.rdf'),
-		 Feed ('debianhelp.org', 'http://www.debianhelp.org/rss.xml'),
-		 Feed ('LWN', 'http://lwn.net/headlines/rss'),
-		 Feed ('lugradio', 'http://lugradio.org/episodes.ogg.rss'),
-		 #Feed ('Planet Debian', 'http://planet.debian.org/rss20.xml'),
-		 Feed ('Debian Times', 'http://times.debian.net/?format=rss20.xml'),
-		 Feed ('Debian Package of the Day', 'http://debaday.debian.net/feed/'),
-		 Feed ('Slashdot', 'http://rss.slashdot.org/Slashdot/slashdot'),
-		 Feed ('KernelTrap', 'http://kerneltrap.org/node/feed'),
-		 Feed ('UK Terror Status', 'http://www.terror-alert.co.uk/feed/'),
-		 Feed ('Open Rights Group', 'http://www.openrightsgroup.org/feed/'),
-		 Feed ('Free Software Foundation', 'http://www.fsf.org/news/RSS'),
-		 Feed ('Spyblog', 'http://p10.hostingprod.com/@spyblog.org.uk/blog/atom.xml'),
-		 Feed ('Ars Technica', 'http://feeds.arstechnica.com/arstechnica/BAaf')]
-
-refresh = 60 * 60 # seconds
-#feeds = [Feed ('yahoo', 'http://rss.news.yahoo.com/rss/topstories'),
-#         #Feed ('google', 'http://news.google.com/?output=rss'),
-#		 Feed ('bbc', 'http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml')]
-
-# IRC config
+# IRC server
 server = 'irc.uk.quakenet.org'
 port = 6667
 nick = 'anne'
-channel = 'debian'
+#channel = 'debian'
+channel = 'annetest'
 
-import sys
-from twisted.internet import reactor, protocol, task
-from twisted.python import log
-from twisted.words.protocols import irc
+# end of configuration
 
-def refreshFeeds (factory):
+def got_data (data, feed, announce):
+	import feedparser
+	data = feedparser.parse (data)
+	
+	if data.bozo == '1':
+		log.msg ('%s: %s' % (feed['name'], data.bozo_exception))
+	
+	if len (data.entries) == 0:
+		log.msg ('%s: 0 entries; ignoring' % (feed['name']))
+
+	old_entries = feed.get ('entries', None)
+	if feed.has_key ('headline'):
+		new_entries = feed['headline'] (feed, data)
+	else:
+		new_entries = set (['%s (%s): <%s>' % (e.title, feed['name'], e.link) for e in data.entries])
+
+	if old_entries != None:
+		for e in new_entries.difference (old_entries):
+			announce (e)
+	feed['entries'] = new_entries
+
+def got_error (failure, feed):
+	#log.err ('%s: %s' % (url, failure.getErrorMessage ()))
+	log.err ()
+	return failure
+
+def refresh_feeds (announce):
+	from twisted.web.client import getPage
+
 	for feed in feeds:
-		headlines_prev = feed.headlines
-		feed.refresh ()
-		headlines_new = feed.headlines.difference (headlines_prev)
-		print '%s: %d new headlines' % (feed.name, len (headlines_new))
+		d = getPage (feed['url'], timeout = 60, agent = 'anne/0.2')
+		d.addCallback (got_data, feed, announce)
+		d.addErrback (got_error, feed)
 
-		if len (headlines_prev) > 0:
-			if len (headlines_new) == len (headlines_prev):
-				print '%s: might have lost some headlines' % (feed.name)
-			for h in headlines_new:
-				factory.announce (h)
-
+from twisted.words.protocols import irc
 class AnnounceBot (irc.IRCClient):
 	'''An IRC but to announce things to a channel.'''
 
@@ -113,6 +99,7 @@ class AnnounceBot (irc.IRCClient):
 		log.msg ('kicked by %s (%s)' % (kicker, message))
 		self.join (self.factory.channel)
 
+from twisted.internet import protocol
 class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 	'''A factory for AnnounceBots.
 
@@ -157,9 +144,11 @@ if __name__ == '__main__':
 	log.startLogging (sys.stdout, setStdout=False)
 
 	factory = AnnounceBotFactory (channel)
+
+	from twisted.internet import task
+	l = task.LoopingCall (refresh_feeds, factory.announce)
+	l.start (refresh_time)
+
+	from twisted.internet import reactor
 	reactor.connectTCP (server, port, factory)
-
-	l = task.LoopingCall (refreshFeeds, (factory))
-	l.start (refresh)
-
 	reactor.run ()
