@@ -102,11 +102,9 @@ class AnnounceBot (irc.IRCClient):
 		irc.IRCClient.connectionMade (self)
 		log.msg ('connection made')
 	
-	def connectionLost (self, reason):
-		irc.IRCClient.connectionLost (self)
-	
 	def signedOn (self):
 		self.join (self.factory.channel)
+		log.msg ('signed on')
 
 	def joined (self, channel):
 		log.msg ('joined ', channel)
