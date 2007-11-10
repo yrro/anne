@@ -55,10 +55,17 @@ feeds = [Feed ('debian-security-announce', 'http://www.debian.org/security/dsa',
 		 Feed ('debianhelp.org', 'http://www.debianhelp.org/rss.xml'),
 		 Feed ('LWN', 'http://lwn.net/headlines/rss'),
 		 Feed ('lugradio', 'http://lugradio.org/episodes.ogg.rss'),
-		 Feed ('Planet Debian', 'http://planet.debian.org/rss20.xml'),
+		 #Feed ('Planet Debian', 'http://planet.debian.org/rss20.xml'),
 		 Feed ('Debian Times', 'http://times.debian.net/?format=rss20.xml'),
 		 Feed ('Debian Package of the Day', 'http://debaday.debian.net/feed/'),
-		 Feed ('Slashdot', 'http://rss.slashdot.org/Slashdot/slashdot')]
+		 Feed ('Slashdot', 'http://rss.slashdot.org/Slashdot/slashdot'),
+		 Feed ('KernelTrap', 'http://kerneltrap.org/node/feed'),
+		 Feed ('UK Terror Status', 'http://www.terror-alert.co.uk/feed/'),
+		 Feed ('Open Rights Group', 'http://www.openrightsgroup.org/feed/'),
+		 Feed ('Free Software Foundation', 'http://www.fsf.org/news/RSS'),
+		 Feed ('Spyblog', 'http://p10.hostingprod.com/@spyblog.org.uk/blog/atom.xml'),
+		 Feed ('Ars Technica', 'http://feeds.arstechnica.com/arstechnica/BAaf')]
+
 refresh = 60 * 60 # seconds
 #feeds = [Feed ('yahoo', 'http://rss.news.yahoo.com/rss/topstories'),
 #         #Feed ('google', 'http://news.google.com/?output=rss'),
