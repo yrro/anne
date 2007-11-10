@@ -100,7 +100,7 @@ class AnnounceBot (irc.IRCClient):
 
 	def connectionMade (self):
 		irc.IRCClient.connectionMade (self)
-		print 'connection made'
+		log.msg ('connection made')
 	
 	def connectionLost (self, reason):
 		irc.IRCClient.connectionLost (self)
@@ -109,10 +109,10 @@ class AnnounceBot (irc.IRCClient):
 		self.join (self.factory.channel)
 
 	def joined (self, channel):
-		print 'joined ', channel
+		log.msg ('joined ', channel)
 	
 	def kickedFrom (self, channel, kicker, message):
-		print 'kicked by %s (%s)' % (kicker, message)
+		log.msg ('kicked by %s (%s)' % (kicker, message))
 		self.join (self.factory.channel)
 
 class AnnounceBotFactory (protocol.ReconnectingClientFactory):
@@ -139,21 +139,24 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
 	def announce (self, announcement):
 		if self.bot == None:
-			print 'not connected; skipping "%s"' % (announcement)
+			log.msg ('not connected; skipping "%s"' % (announcement))
 		else:
 			self.bot.msg ('#%s' % (self.channel), announcement.encode ('utf-8'))
 	
 	def clientConnectionLost (self, connector, reason):
-		print 'connection lost: ', reason
+		log.msg ('connection lost: ', reason)
 		self.bot = None
 		protocol.ReconnectingClientFactory.clientConnectionLost (self, connector, reason)
 	
 	def clientConnectionFailed (self, connector, reason):
-		print 'connection failed: ', reason
+		log.msg ('connection failed: ', reason)
 		protocol.ReconnectingClientFactory.clientConnectionFailed (self, connector, reason)
 
+from twisted.python import log
+
 if __name__ == '__main__':
-	log.startLogging (sys.stdout)
+	import sys
+	log.startLogging (sys.stdout, setStdout=False)
 
 	factory = AnnounceBotFactory (channel)
 	reactor.connectTCP (server, port, factory)
