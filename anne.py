@@ -22,7 +22,7 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
          {'name': 'debianhelp.org',             'url': 'http://www.debianhelp.org/rss.xml'},
          {'name': 'LWN',                        'url': 'http://lwn.net/headlines/rss'},
          {'name': 'lugradio',                   'url': 'http://lugradio.org/episodes.ogg.rss'},
-         {'name': 'Planet Debian',              'url': 'http://planet.debian.org/rss20.xml'},
+         #{'name': 'Planet Debian',              'url': 'http://planet.debian.org/rss20.xml'},
          {'name': 'Debian Times',               'url': 'http://times.debian.net/?format=rss20.xml'},
          {'name': 'Debian Package of the Day',  'url': 'http://debaday.debian.net/feed/'},
          {'name': 'Slashdot',                   'url': 'http://rss.slashdot.org/Slashdot/slashdot'},
