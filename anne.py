@@ -58,16 +58,21 @@ def got_data (data, feed, announce):
     if len (data.entries) == 0:
         log.msg ('%s: 0 entries; ignoring' % (feed['name']))
 
-    old_entries = feed.get ('entries', None)
     if feed.has_key ('headline'):
-        new_entries = feed['headline'] (feed, data)
+        current_entries = feed['headline'] (feed, data)
     else:
-        new_entries = set (['%s (%s): <%s>' % (e.title, feed['name'], e.link) for e in data.entries])
+        current_entries = set (['%s (%s): <%s>' % (e.title, feed['name'], e.link) for e in data.entries])
 
-    if old_entries != None:
-        for e in new_entries.difference (old_entries):
+    old_entries = feed.get ('entries', None)
+    if old_entries == None:
+        log.msg ('%s: %i entries' % (feed['name'], len (current_entries)))
+    else:
+        new_entries = current_entries.difference (old_entries)
+        log.msg ('%s: %i new entries' % (feed['name'], len (new_entries)))
+        for e in new_entries:
             announce (e)
-    feed['entries'] = new_entries
+
+    feed['entries'] = current_entries
 
 def got_error (failure, feed):
     #log.err ('%s: %s' % (url, failure.getErrorMessage ()))
