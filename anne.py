@@ -43,8 +43,7 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
 server = 'irc.uk.quakenet.org'
 port = 6667
 nick = 'anne'
-#channel = 'debian'
-channel = 'annetest'
+channel = 'debian'
 
 # end of configuration
 
