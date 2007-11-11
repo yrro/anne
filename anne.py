@@ -31,7 +31,9 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
          {'name': 'Open Rights Group',          'url': 'http://www.openrightsgroup.org/feed/'},
          {'name': 'Free Software Foundation',   'url': 'http://www.fsf.org/news/RSS'},
          {'name': 'Spyblog',                    'url': 'http://p10.hostingprod.com/@spyblog.org.uk/blog/atom.xml'},
-         {'name': 'Ars Technica',               'url': 'http://feeds.arstechnica.com/arstechnica/BAaf'}]
+         {'name': 'Ars Technica',               'url': 'http://feeds.arstechnica.com/arstechnica/BAaf'},
+         {'name': 'Groklaw News Picks',         'url': 'http://www.groklaw.net/backend/GLNewsPicks.rdf'},
+         {'name': 'Groklaw',                    'url': 'http://www.groklaw.net/backend/GrokLaw.rdf'}]
 
 #feeds = [{'name': 'yahoo',  'url': 'http://rss.news.yahoo.com/rss/topstories', 'headline': headlines_title},
 #         {'name': 'google', 'url': 'http://news.google.com/?output=rss', 'headline': headlines_title},
