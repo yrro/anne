@@ -25,7 +25,7 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
          #{'name': 'Planet Debian',              'url': 'http://planet.debian.org/rss20.xml'},
          {'name': 'Debian Times',               'url': 'http://times.debian.net/?format=rss20.xml'},
          {'name': 'Debian Package of the Day',  'url': 'http://debaday.debian.net/feed/'},
-         {'name': 'Slashdot',                   'url': 'http://rss.slashdot.org/Slashdot/slashdot'},
+         #{'name': 'Slashdot',                   'url': 'http://rss.slashdot.org/Slashdot/slashdot'},
          {'name': 'KernelTrap',                 'url': 'http://kerneltrap.org/node/feed'},
          {'name': 'UK Terror Status',           'url': 'http://www.terror-alert.co.uk/feed/'},
          {'name': 'Open Rights Group',          'url': 'http://www.openrightsgroup.org/feed/'},
