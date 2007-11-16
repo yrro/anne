@@ -5,10 +5,16 @@
 
 refresh_time = 60 * 60 # seconds
 
+def sws (s):
+    '''Squeeze whitespace characters together. Whitespace characters
+    are taken from <http://www.w3.org/TR/2006/REC-xml11-20060816/#NT-S>.
+    Python's string/uniode split method appears to handle them all.'''
+    return ' '.join (s.split ())
+
 def headlines_summary (feed, data):
     '''debian-security-announce describes the vulnerability in the summary
     of its entries.'''
-    return set (['%s (%s): %s <%s>' % (e.title, feed['name'], e.summary, e.link) for e in data.entries])
+    return set (['%s (%s): %s <%s>' % (sws (e.title), feed['name'], sws (e.summary), sws (e.link)) for e in data.entries])
 
 def headlines_title (feed, data):
     '''useful for testing'''
@@ -62,7 +68,7 @@ def got_data (data, feed, announce):
     if feed.has_key ('headline'):
         current_entries = feed['headline'] (feed, data)
     else:
-        current_entries = set (['%s (%s): <%s>' % (e.title, feed['name'], e.link) for e in data.entries])
+        current_entries = set (['%s (%s): <%s>' % (sws (e.title), feed['name'], sws (e.link)) for e in data.entries])
 
     old_entries = feed.get ('entries', None)
     if old_entries == None:
