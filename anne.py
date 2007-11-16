@@ -131,8 +131,14 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
 
         self.bot = AnnounceBot ()
         self.bot.factory = self
+
         self.bot.nickname = nick
         self.bot.realname = 'Announce Bot'
+        self.bot.versionName = 'anne'
+        self.bot.versionNum = '0'
+        self.bot.versionEnv = sws (sys.version)
+        self.bot.sourceURL = 'http://robots.org.uk/src/anne/'
+
         self.bot.lineRate = 3
         return self.bot
 
