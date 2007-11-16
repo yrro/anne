@@ -57,6 +57,7 @@ def got_data (data, feed, announce):
 
     if len (data.entries) == 0:
         log.msg ('%s: 0 entries; ignoring' % (feed['name']))
+        return
 
     if feed.has_key ('headline'):
         current_entries = feed['headline'] (feed, data)
