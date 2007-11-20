@@ -24,7 +24,7 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
          {'name': 'debian-news',                'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news'},
          {'name': 'debian-devel-announce',      'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce'},
          {'name': 'debian-announce',            'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce'},
-         {'name': 'debian-administration.org',  'url': 'http://www.debian-administration.org/headlines.rdf'},
+         {'name': 'debian-administration.org',  'url': 'http://www.debian-administration.org/atom.xml'},
          {'name': 'debianhelp.org',             'url': 'http://www.debianhelp.org/rss.xml'},
          {'name': 'LWN',                        'url': 'http://lwn.net/headlines/rss'},
          {'name': 'lugradio',                   'url': 'http://lugradio.org/episodes.ogg.rss'},
@@ -40,10 +40,10 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
          {'name': 'Ars Technica',               'url': 'http://feeds.arstechnica.com/arstechnica/BAaf'},
          {'name': 'Groklaw News Picks',         'url': 'http://www.groklaw.net/backend/GLNewsPicks.rdf'},
          {'name': 'Groklaw',                    'url': 'http://www.groklaw.net/backend/GrokLaw.rdf'},
-         {'name': 'xkcd',                       'url': 'http://xkcd.com/rss.xml'}]
+         {'name': 'xkcd',                       'url': 'http://xkcd.com/atom.xml'}]
 
 #feeds = [{'name': 'yahoo',  'url': 'http://rss.news.yahoo.com/rss/topstories', 'headline': headlines_title},
-#         {'name': 'google', 'url': 'http://news.google.com/?output=rss', 'headline': headlines_title},
+#         {'name': 'google', 'url': 'http://news.google.com/?output=atom', 'headline': headlines_title},
 #         {'name': 'bbc',  'url': 'http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml', 'headlines': headlines_title}]
 
 # IRC server
