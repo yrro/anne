@@ -11,16 +11,20 @@ def sws (s):
     Python's string/uniode split method appears to handle them all.'''
     return ' '.join (s.split ())
 
-def headlines_summary (feed, data):
+def headline (feed, data, entry):
+    '''Default feed entry format.'''
+    return '%s (%s): <%s>' % (sws (entry.title), feed['name'], sws (entry.link))
+
+def headline_summary (feed, data, entry):
     '''debian-security-announce describes the vulnerability in the summary
     of its entries.'''
-    return set (['%s (%s): %s <%s>' % (sws (e.title), feed['name'], sws (e.summary), sws (e.link)) for e in data.entries])
+    return '%s (%s): %s <%s>' % (sws (entry.title), feed['name'], sws (entry.summary), sws (entry.link))
 
-def headlines_title (feed, data):
+def headline_title (feed, data, entry):
     '''useful for testing'''
-    return  set (['%s: %s' % (feed['name'], e.title) for e in data.entries])
+    return  '%s: %s' % (feed['name'], sws (entry.title))
 
-feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/security/dsa', 'headline': headlines_summary},
+feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/security/dsa', 'headline': headline_summary},
          {'name': 'debian-news',                'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news'},
          {'name': 'debian-devel-announce',      'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce'},
          {'name': 'debian-announce',            'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce'},
@@ -42,9 +46,9 @@ feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/se
          {'name': 'Groklaw',                    'url': 'http://www.groklaw.net/backend/GrokLaw.rdf'},
          {'name': 'xkcd',                       'url': 'http://xkcd.com/atom.xml'}]
 
-#feeds = [{'name': 'yahoo',  'url': 'http://rss.news.yahoo.com/rss/topstories', 'headline': headlines_title},
-#         {'name': 'google', 'url': 'http://news.google.com/?output=atom', 'headline': headlines_title},
-#         {'name': 'bbc',  'url': 'http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml', 'headlines': headlines_title}]
+#feeds = [{'name': 'yahoo',  'url': 'http://rss.news.yahoo.com/rss/topstories', 'headline': headline_title},
+#         {'name': 'google', 'url': 'http://news.google.com/?output=atom', 'headline': headline_title},
+#         {'name': 'bbc',  'url': 'http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml', 'headlines': headline_title}]
 
 # IRC server
 server = 'irc.uk.quakenet.org'
@@ -65,16 +69,19 @@ def got_data (data, feed, announce):
         log.msg ('%s: 0 entries; ignoring' % (feed['name']))
         return
 
-    if feed.has_key ('headline'):
-        current_entries = feed['headline'] (feed, data)
-    else:
-        current_entries = set (['%s (%s): <%s>' % (sws (e.title), feed['name'], sws (e.link)) for e in data.entries])
+    # feed entires are stored in a dict that maps the entys GUID to its
+    # announcement string
+    hf = feed.get ('headline', headline)
+    current_entries = dict ([(e.id, hf (feed, data, e)) for e in data.entries if hasattr (e, 'id')])
 
     old_entries = feed.get ('entries', None)
     if old_entries == None:
         log.msg ('%s: %i entries' % (feed['name'], len (current_entries)))
     else:
-        new_entries = current_entries.difference (old_entries)
+        new_entries = []
+        for id, entry in current_entries.iteritems ():
+            if id not in old_entries:
+                new_entries.append (entry)
         log.msg ('%s: %i new entries' % (feed['name'], len (new_entries)))
         for e in new_entries:
             announce (e)
