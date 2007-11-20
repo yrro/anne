@@ -58,7 +58,7 @@ def got_data (data, feed, announce):
     import feedparser
     data = feedparser.parse (data)
 
-    if data.bozo == '1':
+    if data.bozo == 1:
         log.msg ('%s: %s' % (feed['name'], data.bozo_exception))
 
     if len (data.entries) == 0:
