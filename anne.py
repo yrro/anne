@@ -73,7 +73,15 @@ def got_data (data, feed, announce):
     # feed entires are stored in a dict that maps the entry's GUID to its
     # announcement string
     hf = feed.get ('headline', headline)
-    current_entries = dict ([(e.id, hf (feed, data, e)) for e in data.entries if hasattr (e, 'id')])
+    current_entries = {}
+    ignored_entries = 0
+    for e in data.entries:
+        if not hasattr (e, 'id'):
+            ignored_entries += 1
+            continue
+        current_entries[e.id] = hf (feed, data, e)
+    if ignored_entries > 0:
+        log.msg ('%s: ignored %i entries without ids' % (feed['name'], ignored_entries))
 
     old_entries = feed.get ('entries', None)
     if old_entries == None:
