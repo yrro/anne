@@ -25,6 +25,7 @@ def headline_title (feed, data, entry):
     return  '%s: %s' % (feed['name'], sws (entry.title))
 
 feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/security/dsa', 'headline': headline_summary},
+         {'name': 'debian-infrastructure-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.infrastructure.announce'},
          {'name': 'debian-news',                'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news'},
          {'name': 'debian-devel-announce',      'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce'},
          {'name': 'debian-announce',            'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce'},
