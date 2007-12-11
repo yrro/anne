@@ -70,7 +70,7 @@ def got_data (data, feed, announce):
         log.msg ('%s: 0 entries; ignoring' % (feed['name']))
         return
 
-    # feed entires are stored in a dict that maps the entys GUID to its
+    # feed entires are stored in a dict that maps the entry's GUID to its
     # announcement string
     hf = feed.get ('headline', headline)
     current_entries = dict ([(e.id, hf (feed, data, e)) for e in data.entries if hasattr (e, 'id')])
