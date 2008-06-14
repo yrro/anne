@@ -3,7 +3,7 @@
 # IRC bot that announces entries from RSS feeds to a channel.
 # Written by Sam Morris <sam@robots.org.uk>
 
-refresh_time = 60 * 60 # seconds
+import config
 
 def sws (s):
     '''Squeeze whitespace characters together. Whitespace characters
@@ -11,7 +11,7 @@ def sws (s):
     Python's string/uniode split method appears to handle them all.'''
     return ' '.join (s.split ())
 
-def headline (feed, data, entry):
+def headline_default (feed, data, entry):
     '''Default feed entry format.'''
     return '%s (%s): <%s>' % (sws (entry.title), feed['name'], sws (entry.link))
 
@@ -23,39 +23,6 @@ def headline_summary (feed, data, entry):
 def headline_title (feed, data, entry):
     '''useful for testing'''
     return  '%s: %s' % (feed['name'], sws (entry.title))
-
-feeds = [{'name': 'debian-security-announce',   'url': 'http://www.debian.org/security/dsa', 'headline': headline_summary},
-         {'name': 'debian-infrastructure-announce', 'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.infrastructure.announce'},
-         {'name': 'debian-news',                'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.news'},
-         {'name': 'debian-devel-announce',      'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.devel.announce'},
-         {'name': 'debian-announce',            'url': 'http://rss.gmane.org/messages/excerpts/gmane.linux.debian.user.announce'},
-         {'name': 'debian-administration.org',  'url': 'http://www.debian-administration.org/atom.xml'},
-         {'name': 'debianhelp.org',             'url': 'http://www.debianhelp.org/rss.xml'},
-         {'name': 'LWN',                        'url': 'http://lwn.net/headlines/rss'},
-         {'name': 'lugradio',                   'url': 'http://lugradio.org/episodes.ogg.rss'},
-         #{'name': 'Planet Debian',              'url': 'http://planet.debian.org/rss20.xml'},
-         {'name': 'Debian Times',               'url': 'http://times.debian.net/?format=rss20.xml'},
-         {'name': 'Debian Package of the Day',  'url': 'http://debaday.debian.net/feed/'},
-         #{'name': 'Slashdot',                   'url': 'http://rss.slashdot.org/Slashdot/slashdot'},
-         {'name': 'KernelTrap',                 'url': 'http://kerneltrap.org/node/feed'},
-         {'name': 'UK Terror Status',           'url': 'http://www.terror-alert.co.uk/feed/'},
-         {'name': 'Open Rights Group',          'url': 'http://www.openrightsgroup.org/feed/'},
-         {'name': 'Free Software Foundation',   'url': 'http://www.fsf.org/news/RSS'},
-         {'name': 'Spyblog',                    'url': 'http://p10.hostingprod.com/@spyblog.org.uk/blog/atom.xml'},
-         {'name': 'Ars Technica',               'url': 'http://feeds.arstechnica.com/arstechnica/BAaf'},
-         {'name': 'Groklaw News Picks',         'url': 'http://www.groklaw.net/backend/GLNewsPicks.rdf'},
-         {'name': 'Groklaw',                    'url': 'http://www.groklaw.net/backend/GrokLaw.rdf'},
-         {'name': 'xkcd',                       'url': 'http://xkcd.com/atom.xml'}]
-
-#feeds = [{'name': 'yahoo',  'url': 'http://rss.news.yahoo.com/rss/topstories', 'headline': headline_title},
-#         {'name': 'google', 'url': 'http://news.google.com/?output=atom', 'headline': headline_title},
-#         {'name': 'bbc',  'url': 'http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml', 'headlines': headline_title}]
-
-# IRC server
-server = 'irc.uk.quakenet.org'
-port = 6667
-nick = 'anne'
-channel = 'debian'
 
 # end of configuration
 
@@ -72,7 +39,7 @@ def got_data (data, feed, announce):
 
     # feed entires are stored in a dict that maps the entry's GUID to its
     # announcement string
-    hf = feed.get ('headline', headline)
+    hf = globals ()[feed.get ('headline', 'headline_default')]
     current_entries = {}
     ignored_entries = 0
     for e in data.entries:
@@ -105,7 +72,7 @@ def got_error (failure, feed):
 def refresh_feeds (announce):
     from twisted.web.client import getPage
 
-    for feed in feeds:
+    for feed in config.feeds:
         d = getPage (feed['url'], timeout = 60, agent = 'anne/0.2')
         d.addCallback (got_data, feed, announce)
         d.addErrback (got_error, feed)
@@ -148,7 +115,7 @@ class AnnounceBotFactory (protocol.ReconnectingClientFactory):
         self.bot = AnnounceBot ()
         self.bot.factory = self
 
-        self.bot.nickname = nick
+        self.bot.nickname = config.nick
         self.bot.realname = 'Announce Bot'
         self.bot.versionName = 'anne'
         self.bot.versionNum = '0'
@@ -179,14 +146,14 @@ if __name__ == '__main__':
     import sys
     log.startLogging (sys.stdout, setStdout=False)
 
-    factory = AnnounceBotFactory (channel)
+    factory = AnnounceBotFactory (config.channel)
 
     from twisted.internet import task
     l = task.LoopingCall (refresh_feeds, factory.announce)
-    l.start (refresh_time)
+    l.start (config.refresh_time)
 
     from twisted.internet import reactor
-    reactor.connectTCP (server, port, factory)
+    reactor.connectTCP (config.host, config.port, factory)
     reactor.run ()
 
 # vim: softtabstop=4 expandtab
